@@ -2,12 +2,17 @@ package com.techtalentsouth.TechTalentTwitter2.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.techtalentsouth.TechTalentTwitter2.model.Tweet;
+import com.techtalentsouth.TechTalentTwitter2.model.User;
 import com.techtalentsouth.TechTalentTwitter2.service.TweetService;
 import com.techtalentsouth.TechTalentTwitter2.service.UserService;
 
@@ -30,6 +35,18 @@ public class TweetController {
 	@GetMapping(value = "/tweets/new")
 	public String getTweetForm(Model model) {
 	    model.addAttribute("tweet", new Tweet());
+	    return "newTweet";
+	}
+	
+	@PostMapping(value = "/tweets")
+	public String submitTweetForm(@Valid Tweet tweet, BindingResult bindingResult, Model model) {
+	    User user = userService.getLoggedInUser();
+	    if (!bindingResult.hasErrors()) {
+	        tweet.setUser(user);
+	        tweetService.save(tweet);
+	        model.addAttribute("successMessage", "Tweet successfully created!");
+	        model.addAttribute("tweet", new Tweet());
+	    }
 	    return "newTweet";
 	}
 }

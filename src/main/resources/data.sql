@@ -1,1 +1,2 @@
-REPLACE INTO `role` VALUES (1,'USER');
+-- REPLACE INTO `role` VALUES (1,'USER');
+MERGE INTO `role` VALUES (1,'USER');
